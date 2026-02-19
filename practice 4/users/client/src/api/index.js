@@ -1,0 +1,28 @@
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: "http://localhost:3000/api",
+  headers: {
+    "Content-Type": "application/json",
+    "accept": "application/json",
+  }
+});
+
+export const api = {
+  getUsers: async () => {
+    const response = await apiClient.get("/users");
+    return response.data;
+  },
+  createUser: async (user) => {
+    const response = await apiClient.post("/users", user);
+    return response.data;
+  },
+  updateUser: async (id, user) => {
+    const response = await apiClient.patch(`/users/${id}`, user);
+    return response.data;
+  },
+  deleteUser: async (id) => {
+    const response = await apiClient.delete(`/users/${id}`);
+    return response.data;
+  }
+};
