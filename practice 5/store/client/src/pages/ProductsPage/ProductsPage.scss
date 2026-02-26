@@ -5,7 +5,6 @@ $text: #e7eaf3;
 
 $primary: rgba(99, 102, 241, 0.55);
 $primaryBg: rgba(99, 102, 241, 0.18);
-
 $danger: rgba(239, 68, 68, 0.45);
 $dangerBg: rgba(239, 68, 68, 0.12);
 
@@ -33,14 +32,14 @@ $dangerBg: rgba(239, 68, 68, 0.12);
 .header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.02);
-  &_inner {
+  &__inner {
     @include container();
     padding: 14px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  &_right {
+  &__right {
     opacity: 0.75;
     font-size: 13px;
   }
@@ -118,6 +117,15 @@ $dangerBg: rgba(239, 68, 68, 0.12);
   flex-wrap: wrap;
 }
 
+.productImage {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid $border;
+  background: $panel;
+}
+
 .productId {
   opacity: 0.7;
   font-variant-numeric: tabular-nums;
@@ -152,7 +160,7 @@ $dangerBg: rgba(239, 68, 68, 0.12);
 .footer {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.02);
-  &_inner {
+  &__inner {
     @include container();
     padding: 14px 16px;
     opacity: 0.7;
@@ -178,17 +186,17 @@ $dangerBg: rgba(239, 68, 68, 0.12);
   background: #0f1526;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
   overflow: hidden;
-  &_header {
+  &__header {
     padding: 12px;
     border-bottom: 1px solid $border;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  &_title {
+  &__title {
     font-weight: 700;
   }
-  &_footer {
+  &__footer {
     display: flex;
     justify-content: flex-end;
     gap: 8px;

@@ -65,9 +65,7 @@ export default function ProductsPage() {
         setProducts((prev) => [...prev, newProduct]);
       } else {
         const updatedProduct = await api.updateProduct(payload.id, payload);
-        setProducts((prev) =>
-          prev.map((p) => (p.id === payload.id ? updatedProduct : p))
-        );
+        setProducts((prev) => prev.map((p) => (p.id === payload.id ? updatedProduct : p)));
       }
       closeModal();
     } catch (err) {
@@ -89,36 +87,22 @@ export default function ProductsPage() {
         <div className="container">
           <div className="toolbar">
             <h1 className="title">Товары</h1>
-            <button className="btn btn--primary" onClick={openCreate}>
-              + Добавить товар
-            </button>
+            <button className="btn btn--primary" onClick={openCreate}>+ Добавить товар</button>
           </div>
 
           {loading ? (
             <div className="empty">Загрузка...</div>
           ) : (
-            <ProductsList
-              products={products}
-              onEdit={openEdit}
-              onDelete={handleDelete}
-            />
+            <ProductsList products={products} onEdit={openEdit} onDelete={handleDelete} />
           )}
         </div>
       </main>
 
       <footer className="footer">
-        <div className="footer__inner">
-          © {new Date().getFullYear()} Fashion Store
-        </div>
+        <div className="footer__inner">© {new Date().getFullYear()} Fashion Store</div>
       </footer>
 
-      <ProductModal
-        open={modalOpen}
-        mode={modalMode}
-        initialProduct={editingProduct}
-        onClose={closeModal}
-        onSubmit={handleSubmitModal}
-      />
+      <ProductModal open={modalOpen} mode={modalMode} initialProduct={editingProduct} onClose={closeModal} onSubmit={handleSubmitModal} />
     </div>
   );
 }
