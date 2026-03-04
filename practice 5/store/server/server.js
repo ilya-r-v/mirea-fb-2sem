@@ -43,15 +43,15 @@ const upload = multer({
 
 let products = [
   { id: nanoid(6), name: 'Классическая футболка', category: 'Футболки', description: 'Хлопок 100%, оверсайз', price: 1290, stock: 25, image: null },
-  { id: nanoid(6), name: 'Джинсы скинни', category: 'Джинсы', description: 'Синие, эластичные, размеры 28-34', price: 3490, stock: 12, image: null },
+  { id: nanoid(6), name: 'Джинсы скинни', category: 'Джинсы', description: 'Синие, размеры 28-34', price: 3490, stock: 12, image: null },
   { id: nanoid(6), name: 'Кожаная куртка', category: 'Куртки', description: 'Натуральная кожа, чёрная', price: 8990, stock: 5, image: null },
   { id: nanoid(6), name: 'Спортивные штаны', category: 'Штаны', description: 'Трикотаж, утеплённые', price: 1990, stock: 18, image: null },
-  { id: nanoid(6), name: 'Рубашка поло', category: 'Рубашки', description: 'Хлопок, пике, тёмно-синяя', price: 1790, stock: 10, image: null },
-  { id: nanoid(6), name: 'Платье', category: 'Платья', description: 'Вискоза, цветочный принт', price: 2490, stock: 8, image: null },
+  { id: nanoid(6), name: 'Рубашка поло', category: 'Рубашки', description: 'Хлопок, тёмно-синяя', price: 1790, stock: 10, image: null },
+  { id: nanoid(6), name: 'Платье', category: 'Платья', description: 'цветочный принт', price: 2490, stock: 8, image: null },
   { id: nanoid(6), name: 'Кепка бейсболка', category: 'Аксессуары', description: 'Хлопок, чёрная, регулируемая', price: 890, stock: 30, image: null },
   { id: nanoid(6), name: 'Тёплый свитер', category: 'Свитеры', description: 'Шерсть с акрилом, серый', price: 2790, stock: 7, image: null },
   { id: nanoid(6), name: 'Шорты джинсовые', category: 'Шорты', description: 'Деним, летние', price: 1390, stock: 15, image: null },
-  { id: nanoid(6), name: 'Толстовка с капюшоном', category: 'Толстовки', description: 'Флис, серая', price: 2990, stock: 11, image: null },
+  { id: nanoid(6), name: 'Толстовка с капюшоном', category: 'Толстовки', description: 'серая', price: 2990, stock: 11, image: null },
   { id: nanoid(6), name: 'Носки классические', category: 'Аксессуары', description: 'Хлопок, набор 3 пары', price: 590, stock: 40, image: null }
 ];
 
