@@ -4,12 +4,15 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
 const JWT_SECRET = 'your_secret_key_here';
 const ACCESS_EXPIRES_IN = '15m';
+
+app.use(cors());
 
 let users = [];
 let products = [];
