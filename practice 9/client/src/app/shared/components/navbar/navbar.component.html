@@ -1,0 +1,14 @@
+<nav>
+    <a routerLink="/" class="logo">Product Manager</a>
+    <div class="nav-links">
+        <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
+            <a routerLink="/profile" routerLinkActive="active">Profile</a>
+            <a routerLink="/products" routerLinkActive="active">Products</a>
+            <a (click)="logout()" class="logout">Logout</a>
+        </ng-container>
+        <ng-template #guest>
+            <a routerLink="/login" routerLinkActive="active">Login</a>
+            <a routerLink="/register" routerLinkActive="active">Register</a>
+        </ng-template>
+    </div>
+</nav>

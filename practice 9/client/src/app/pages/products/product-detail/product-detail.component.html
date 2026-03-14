@@ -1,0 +1,16 @@
+<div class="detail-container">
+    <h2>Product Details</h2>
+    <div *ngIf="product; else loading">
+        <p><strong>Title:</strong> {{ product.title }}</p>
+        <p><strong>Category:</strong> {{ product.category }}</p>
+        <p><strong>Description:</strong> {{ product.description }}</p>
+        <p><strong>Price:</strong> {{ product.price | currency }}</p>
+        <div class="actions">
+        <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-warning">Edit</a>
+        <a routerLink="/products" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+    <ng-template #loading>
+        <p>Loading...</p>
+    </ng-template>
+</div>
