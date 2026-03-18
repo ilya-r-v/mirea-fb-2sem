@@ -1,20 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Product } from '../../models/product.model';
 import { RouterLink } from '@angular/router';
-import { NgFor, CurrencyPipe } from '@angular/common';
+import { NgFor, NgIf, CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [RouterLink, NgFor, CurrencyPipe],
+  imports: [RouterLink, NgFor, NgIf, CurrencyPipe],
   styleUrls: ['./products.component.scss'],
   templateUrl: './products.component.html',
 })
 export class ProductsComponent implements OnInit {
     products: Product[] = [];
 
-    constructor(private apiService: ApiService) {}
+    get canManage(): boolean {
+        return this.authService.hasRoleSync('seller', 'admin');
+    }
+
+    get canDelete(): boolean {
+        return this.authService.hasRoleSync('admin');
+    }
+
+    constructor(
+        private apiService: ApiService,
+        public authService: AuthService
+    ) {}
 
     ngOnInit(): void {
         this.loadProducts();

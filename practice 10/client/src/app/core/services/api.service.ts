@@ -10,7 +10,7 @@ export class ApiService {
 
     constructor(private http: HttpClient) {}
 
-    register(data: { email: string; first_name: string; last_name: string; password: string }): Observable<User> {
+    register(data: { email: string; first_name: string; last_name: string; password: string; role?: string }): Observable<User> {
         return this.http.post<User>(`${this.baseUrl}/auth/register`, data);
     }
 
@@ -26,6 +26,25 @@ export class ApiService {
         return this.http.get<User>(`${this.baseUrl}/auth/me`);
     }
 
+    // Users (admin)
+
+    getUsers(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.baseUrl}/users`);
+    }
+
+    getUser(id: string): Observable<User> {
+        return this.http.get<User>(`${this.baseUrl}/users/${id}`);
+    }
+
+    updateUser(id: string, data: Partial<User>): Observable<User> {
+        return this.http.put<User>(`${this.baseUrl}/users/${id}`, data);
+    }
+
+    blockUser(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/users/${id}`);
+    }
+
+    // Products
 
     getProducts(): Observable<Product[]> {
         return this.http.get<Product[]>(`${this.baseUrl}/products`);

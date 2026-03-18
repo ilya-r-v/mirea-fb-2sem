@@ -1,6 +1,11 @@
 <div class="products-container">
     <h2>Products</h2>
-    <a routerLink="/products/new" class="btn btn-success add-link">Add Product</a>
+    <a
+        *ngIf="canManage"
+        routerLink="/products/new"
+        class="btn btn-success add-link">
+        Add Product
+    </a>
     <table class="table">
         <thead>
         <tr>
@@ -17,8 +22,12 @@
             <td>{{ product.price | currency }}</td>
             <td>
                 <a [routerLink]="['/products', product.id]" class="btn btn-primary mr-2">View</a>
-                <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-primary mr-2">Edit</a>
-                <button (click)="deleteProduct(product.id)" class="btn btn-primary mr-2">Delete</button>
+                <ng-container *ngIf="canManage">
+                    <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-primary mr-2">Edit</a>
+                </ng-container>
+                <ng-container *ngIf="canDelete">
+                    <button (click)="deleteProduct(product.id)" class="btn btn-danger mr-2">Delete</button>
+                </ng-container>
             </td>
         </tr>
         </tbody>

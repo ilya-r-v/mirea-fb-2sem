@@ -16,34 +16,34 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
     let authReq = req;
     if (accessToken) {
         authReq = req.clone({
-        setHeaders: { Authorization: `Bearer ${accessToken}` }
+            setHeaders: { Authorization: `Bearer ${accessToken}` }
         });
     }
 
     return next(authReq).pipe(
         catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 && !req.url.includes('/auth/me')) {
-            const refreshToken = authService.getRefreshToken();
-            if (refreshToken) {
-            return authService.refreshToken(refreshToken).pipe(
-                switchMap((response) => {
-                const newReq = req.clone({
-                    setHeaders: { Authorization: `Bearer ${response.accessToken}` }
-                });
-                return next(newReq);
-                }),
-                catchError(refreshError => {
-                authService.logout();
-                router.navigate(['/login']);
-                return throwError(() => refreshError);
-                })
-            );
-            } else {
-            authService.logout();
-            router.navigate(['/login']);
+            if (error.status === 401) {
+                const refreshToken = authService.getRefreshToken();
+                if (refreshToken) {
+                    return authService.refreshToken(refreshToken).pipe(
+                        switchMap((response) => {
+                            const newReq = req.clone({
+                                setHeaders: { Authorization: `Bearer ${response.accessToken}` }
+                            });
+                            return next(newReq);
+                        }),
+                        catchError(refreshError => {
+                            authService.logout();
+                            router.navigate(['/login']);
+                            return throwError(() => refreshError);
+                        })
+                    );
+                } else {
+                    authService.logout();
+                    router.navigate(['/login']);
+                }
             }
-        }
-        return throwError(() => error);
+            return throwError(() => error);
         })
     );
 };

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
-import { AuthResponse, User } from '../../models/user.model';
+import { AuthResponse, User, UserRole } from '../../models/user.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,12 +18,16 @@ export class AuthService {
 
     private loadUser(): void {
         const token = this.getAccessToken();
-        if (token) {
+        if (!token) return;
+
         this.apiService.getMe().subscribe({
             next: (user) => this.currentUserSubject.next(user),
-            error: () => this.logout(),
+            error: (err: HttpErrorResponse) => {
+                if (err.status === 401) {
+                    this.logout();
+                }
+            },
         });
-        }
     }
 
     getAccessToken(): string | null {
@@ -46,10 +51,10 @@ export class AuthService {
 
     login(credentials: { email: string; password: string }): Observable<AuthResponse> {
         return this.apiService.login(credentials).pipe(
-        tap(response => {
-            this.setTokens(response.accessToken, response.refreshToken);
-            this.loadUser();
-        })
+            tap(response => {
+                this.setTokens(response.accessToken, response.refreshToken);
+                this.loadUser();
+            })
         );
     }
 
@@ -64,9 +69,20 @@ export class AuthService {
 
     refreshToken(refreshToken: string): Observable<AuthResponse> {
         return this.apiService.refresh(refreshToken).pipe(
-        tap(response => {
-            this.setTokens(response.accessToken, response.refreshToken);
-        })
+            tap(response => {
+                this.setTokens(response.accessToken, response.refreshToken);
+            })
         );
+    }
+
+    hasRole(...roles: UserRole[]): Observable<boolean> {
+        return this.currentUser$.pipe(
+            map(user => !!user && roles.includes(user.role))
+        );
+    }
+
+    hasRoleSync(...roles: UserRole[]): boolean {
+        const user = this.currentUserSubject.getValue();
+        return !!user && roles.includes(user.role);
     }
 }

@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
     templateUrl: './register.component.html',
 })
 export class RegisterComponent {
-    userData = { email: '', first_name: '', last_name: '', password: '' };
+    userData = { email: '', first_name: '', last_name: '', password: '', role: 'user' };
     errorMessage = '';
     successMessage = '';
 
@@ -20,13 +20,13 @@ export class RegisterComponent {
 
     onSubmit() {
         this.authService.register(this.userData).subscribe({
-        next: () => {
-            this.successMessage = 'Registration successful! Redirecting...';
-            setTimeout(() => this.router.navigate(['/login']), 2000);
-        },
-        error: (err) => {
-            this.errorMessage = err.error?.error || 'Registration failed';
-        }
+            next: () => {
+                this.successMessage = 'Registration successful! Redirecting...';
+                setTimeout(() => this.router.navigate(['/login']), 2000);
+            },
+            error: (err) => {
+                this.errorMessage = err.error?.error || 'Registration failed';
+            }
         });
     }
 }

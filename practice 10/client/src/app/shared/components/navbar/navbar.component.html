@@ -4,6 +4,7 @@
         <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
             <a routerLink="/profile" routerLinkActive="active">Profile</a>
             <a routerLink="/products" routerLinkActive="active">Products</a>
+            <a *ngIf="user.role === 'admin'" routerLink="/users" routerLinkActive="active">Users</a>
             <a (click)="logout()" class="logout">Logout</a>
         </ng-container>
         <ng-template #guest>

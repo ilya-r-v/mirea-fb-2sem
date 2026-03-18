@@ -10,9 +10,9 @@ const app = express();
 const port = 3000;
 
 const JWT_SECRET = '19d9b12984014b83483b2b9e7b1cb26659cd4623d42ec01c5a0d1a97734590b0004d91828947e3ffee5e1fafc13b7979cfffcb5417d79f5a71b7140277f95e9f';
-const ACCESS_EXPIRES_IN = '5s';
+const ACCESS_EXPIRES_IN = '15m';
 const REFRESH_SECRET = '7a6187ba12b25a22e92e89018eaddd8822bbd4f729dea84e87004dc683a1cf6e171692db518feea91e45046be3a2f23af5e62b05b17bdad0e43dd39b5f222a7a';
-const REFRESH_EXPIRES_IN = '5s';
+const REFRESH_EXPIRES_IN = '7d';
 
 app.use(cors());
 
