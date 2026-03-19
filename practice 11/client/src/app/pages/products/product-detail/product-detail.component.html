@@ -1,0 +1,18 @@
+<div class="detail-container" *ngIf="product; else loading">
+    <h2>{{ product.title }}</h2>
+    <p><strong>Category:</strong> {{ product.category }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+    <p><strong>Price:</strong> {{ product.price | currency }}</p>
+    <div class="actions">
+        <ng-container *ngIf="canManage">
+            <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-primary mr-2">Edit</a>
+        </ng-container>
+        <ng-container *ngIf="canDelete">
+            <button (click)="deleteProduct()" class="btn btn-danger mr-2">Delete</button>
+        </ng-container>
+        <a routerLink="/products" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+<ng-template #loading>
+    <p>Loading...</p>
+</ng-template>

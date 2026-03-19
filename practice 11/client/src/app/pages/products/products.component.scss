@@ -1,0 +1,20 @@
+@import '../../../styles.scss';
+
+.products-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  .add-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .table {
+    margin-top: 1rem;
+  }
+}
