@@ -1,5 +1,8 @@
 <div class="detail-container" *ngIf="product; else loading">
     <h2>{{ product.title }}</h2>
+    <div class="product-image" *ngIf="product.image">
+        <img [src]="'http://localhost:3000' + product.image" [alt]="product.title" class="img-preview" />
+    </div>
     <p><strong>Category:</strong> {{ product.category }}</p>
     <p><strong>Description:</strong> {{ product.description }}</p>
     <p><strong>Price:</strong> {{ product.price | currency }}</p>

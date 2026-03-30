@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — офлайн менеджер задач</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="noise"></div>
+
+  <header>
+    <div class="logo">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">TaskFlow</span>
+    </div>
+    <div id="status-badge" class="status-badge online">
+      <span class="status-dot"></span>
+      <span class="status-label">онлайн</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Твои задачи.<br/></h1>
+    </section>
+
+    <section class="input-section">
+      <form id="task-form">
+        <div class="input-wrap">
+          <input
+            id="task-input"
+            type="text"
+            placeholder="Добавить новую задачу..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" class="add-btn">
+            <span>+</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="tasks-section">
+      <div class="tasks-header">
+        <span class="tasks-title">Список задач</span>
+        <span id="task-count" class="task-count">0 задач</span>
+      </div>
+
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon">✦</div>
+        <p>Здесь пока пусто.<br/>Добавьте первую задачу!</p>
+      </div>
+
+      <ul id="tasks-list"></ul>
+
+      <div id="controls" class="controls hidden">
+        <button id="clear-done" class="ctrl-btn secondary">Удалить выполненные</button>
+        <button id="clear-all" class="ctrl-btn danger">Очистить всё</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -17,4 +17,32 @@
   .table {
     margin-top: 1rem;
   }
+  // Добавьте в products.component.scss или в глобальные стили (styles.scss)
+
+// Миниатюра в таблице товаров
+.table-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.no-image {
+    color: #adb5bd;
+    font-size: 1.1rem;
+}
+
+// Большое изображение на странице детали товара
+.product-image {
+    margin-bottom: 1rem;
+
+    .img-preview {
+        max-width: 100%;
+        max-height: 360px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        object-fit: contain;
+    }
+}
 }

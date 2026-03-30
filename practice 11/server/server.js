@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
@@ -15,6 +18,30 @@ const REFRESH_SECRET = '7a6187ba12b25a22e92e89018eaddd8822bbd4f729dea84e87004dc6
 const REFRESH_EXPIRES_IN = '7d';
 
 app.use(cors());
+
+// ─── Uploads directory ────────────────────────────────────────────────────────
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+app.use('/uploads', express.static(UPLOADS_DIR));
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, UPLOADS_DIR),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${nanoid()}${ext}`);
+  },
+});
+
+const fileFilter = (_req, file, cb) => {
+  const allowed = /jpeg|jpg|png|webp/;
+  const ok = allowed.test(path.extname(file.originalname).toLowerCase()) &&
+             allowed.test(file.mimetype);
+  ok ? cb(null, true) : cb(new Error('Разрешены только изображения (jpeg, jpg, png, webp)'));
+};
+
+const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } });
 
 let users = [];
 let products = [];
@@ -422,10 +449,12 @@ app.delete('/api/users/:id', authMiddleware, roleMiddleware(['admin']), (req, re
  *     security:
  *       - bearerAuth: []
  */
-app.post('/api/products', authMiddleware, roleMiddleware(['seller', 'admin']), (req, res) => {
+app.post('/api/products', authMiddleware, roleMiddleware(['seller', 'admin']), upload.single('image'), (req, res) => {
   const { title, category, description, price } = req.body;
 
   if (!title || !category || !description || price === undefined) {
+    // Remove uploaded file if validation fails
+    if (req.file) fs.unlinkSync(req.file.path);
     return res.status(400).json({ error: 'Все поля обязательны' });
   }
 
@@ -435,6 +464,7 @@ app.post('/api/products', authMiddleware, roleMiddleware(['seller', 'admin']), (
     category,
     description,
     price: Number(price),
+    image: req.file ? `/uploads/${req.file.filename}` : null,
   };
   products.push(newProduct);
   res.status(201).json(newProduct);
@@ -479,9 +509,10 @@ app.get('/api/products/:id', authMiddleware, (req, res) => {
  *     security:
  *       - bearerAuth: []
  */
-app.put('/api/products/:id', authMiddleware, roleMiddleware(['seller', 'admin']), (req, res) => {
+app.put('/api/products/:id', authMiddleware, roleMiddleware(['seller', 'admin']), upload.single('image'), (req, res) => {
   const productIndex = products.findIndex(p => p.id === req.params.id);
   if (productIndex === -1) {
+    if (req.file) fs.unlinkSync(req.file.path);
     return res.status(404).json({ error: 'Товар не найден' });
   }
 
@@ -492,6 +523,15 @@ app.put('/api/products/:id', authMiddleware, roleMiddleware(['seller', 'admin'])
   if (category !== undefined) updatedProduct.category = category;
   if (description !== undefined) updatedProduct.description = description;
   if (price !== undefined) updatedProduct.price = Number(price);
+
+  if (req.file) {
+    // Remove old image file if exists
+    if (updatedProduct.image) {
+      const oldPath = path.join(__dirname, updatedProduct.image);
+      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+    }
+    updatedProduct.image = `/uploads/${req.file.filename}`;
+  }
 
   if (JSON.stringify(products[productIndex]) === JSON.stringify(updatedProduct)) {
     return res.status(400).json({ error: 'Нет данных для обновления' });

@@ -65,4 +65,12 @@ export class ApiService {
     deleteProduct(id: string): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/products/${id}`);
     }
+
+    createProductForm(data: FormData): Observable<Product> {
+        return this.http.post<Product>(`${this.baseUrl}/products`, data);
+    }
+    
+    updateProductForm(id: string, data: FormData): Observable<Product> {
+        return this.http.put<Product>(`${this.baseUrl}/products/${id}`, data);
+    }
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow</title>
+
+  <link rel="manifest" href="/manifest.json" />
+
+  <meta name="theme-color" content="#000000" />
+
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="TaskFlow" />
+  <link rel="apple-touch-icon" href="/icons/icon-128x128.png" />
+
+  <link rel="icon" href="/icons/favicon.ico" type="image/x-icon" />
+
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo"><span class="logo-icon">◈</span>TaskFlow</div>
+    <div id="status-badge" class="status-badge online"><span class="status-label">онлайн</span></div>
+  </header>
+
+  <section class="hero">
+    <h1>Задачи.<br/></h1>
+  </section>
+
+  <form id="task-form" class="input-wrap">
+    <input id="task-input" type="text" placeholder="Новая задача..." autocomplete="off" />
+    <button id="add-btn" type="submit">+</button>
+  </form>
+
+  <div id="tasks-meta" class="tasks-meta">
+    <span id="task-count"></span>
+  </div>
+  <div id="empty-state" class="empty">Список пуст.</div>
+  <ul id="tasks-list"></ul>
+
+  <div id="controls" class="controls hidden">
+    <button id="clear-done">Удалить выполненные</button>
+    <button id="clear-all" class="danger">Очистить всё</button>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
