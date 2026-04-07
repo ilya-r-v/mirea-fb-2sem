@@ -1,0 +1,17 @@
+{
+  "name": "taskflow-server",
+  "version": "2.0.0",
+  "description": "TaskFlow — PWA с WebSocket и Push-уведомлениями",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "generate-vapid": "npx web-push generate-vapid-keys"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4",
+    "web-push": "^3.6.7"
+  }
+}
