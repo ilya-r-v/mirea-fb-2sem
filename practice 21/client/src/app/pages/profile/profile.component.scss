@@ -1,0 +1,24 @@
+@import '../../../styles.scss';
+
+.profile-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-top: 0;
+  }
+
+  p {
+    margin: 0.5rem 0;
+
+    strong {
+      display: inline-block;
+      width: 100px;
+    }
+  }
+}

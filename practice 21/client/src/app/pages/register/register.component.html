@@ -1,0 +1,37 @@
+<div class="register-container">
+    <h2>Register</h2>
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" [(ngModel)]="userData.email" required email #email="ngModel">
+            <div *ngIf="email.invalid && email.touched" class="error">Valid email required</div>
+        </div>
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" [(ngModel)]="userData.first_name" required #first="ngModel">
+            <div *ngIf="first.invalid && first.touched" class="error">First name required</div>
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" [(ngModel)]="userData.last_name" required #last="ngModel">
+            <div *ngIf="last.invalid && last.touched" class="error">Last name required</div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" [(ngModel)]="userData.password" required minlength="6" #password="ngModel">
+            <div *ngIf="password.invalid && password.touched" class="error">Password must be at least 6 characters</div>
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role" [(ngModel)]="userData.role">
+                <option value="user">User</option>
+                <option value="seller">Seller</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Register</button>
+        <p class="mt-3 text-center">Already have account? <a routerLink="/login">Login</a></p>
+    </form>
+    <div *ngIf="errorMessage" class="error text-center mt-3">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="success text-center mt-3">{{ successMessage }}</div>
+</div>

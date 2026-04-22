@@ -1,0 +1,89 @@
+<div class="form-container">
+    <h2>{{ isEdit ? 'Edit Product' : 'New Product' }}</h2>
+
+    <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+    <div class="form-group">
+        <label for="title">Title <span class="required">*</span></label>
+        <input
+            id="title"
+            type="text"
+            class="form-control"
+            [(ngModel)]="title"
+            placeholder="Product title" />
+    </div>
+
+    <div class="form-group">
+        <label for="category">Category <span class="required">*</span></label>
+        <input
+            id="category"
+            type="text"
+            class="form-control"
+            [(ngModel)]="category"
+            placeholder="e.g. Electronics" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description <span class="required">*</span></label>
+        <textarea
+            id="description"
+            class="form-control"
+            [(ngModel)]="description"
+            rows="4"
+            placeholder="Product description">
+        </textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price <span class="required">*</span></label>
+        <input
+            id="price"
+            type="number"
+            class="form-control"
+            [(ngModel)]="price"
+            min="0"
+            step="0.01"
+            placeholder="0.00" />
+    </div>
+
+    <!-- Image upload -->
+    <div class="form-group">
+        <label>Product Image <span class="hint">(jpeg, jpg, png, webp — max 5 MB)</span></label>
+
+        <!-- Preview of new file selected -->
+        <div class="image-preview" *ngIf="previewUrl">
+            <img [src]="previewUrl" alt="Preview" class="img-preview" />
+            <button type="button" class="btn btn-sm btn-outline-danger remove-btn" (click)="removeImage()">
+                ✕ Remove
+            </button>
+        </div>
+
+        <!-- Preview of existing image when editing (and no new file chosen) -->
+        <div class="image-preview" *ngIf="!previewUrl && existingImage">
+            <img [src]="'http://localhost:3000' + existingImage" alt="Current image" class="img-preview" />
+            <button type="button" class="btn btn-sm btn-outline-danger remove-btn" (click)="removeImage()">
+                ✕ Remove
+            </button>
+        </div>
+
+        <!-- File input — hidden, triggered by styled button -->
+        <label class="btn btn-outline-secondary upload-label" *ngIf="!previewUrl && !existingImage">
+            📎 Choose image
+            <input
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                class="file-input-hidden"
+                (change)="onFileChange($event)" />
+        </label>
+    </div>
+
+    <div class="actions">
+        <button
+            class="btn btn-success mr-2"
+            (click)="submit()"
+            [disabled]="loading">
+            {{ loading ? 'Saving…' : (isEdit ? 'Save Changes' : 'Create Product') }}
+        </button>
+        <a routerLink="/products" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>
