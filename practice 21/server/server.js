@@ -67,8 +67,7 @@ async function initRedis() {
 
 /**
  * Middleware чтения из кэша.
- * keyBuilder — функция, принимающая req и возвращающая строковый ключ.
- * ttl        — время жизни кэша (секунды), сохраняется в req.cacheTTL.
+ * Логирует попадание/промах в консоль.
  */
 function cacheMiddleware(keyBuilder, ttl) {
   return async (req, res, next) => {
@@ -76,8 +75,10 @@ function cacheMiddleware(keyBuilder, ttl) {
       const key = keyBuilder(req);
       const cached = await redisClient.get(key);
       if (cached) {
+        console.log(`[CACHE HIT] key: ${key}`);
         return res.json({ source: 'cache', data: JSON.parse(cached) });
       }
+      console.log(`[CACHE MISS] key: ${key}`);
       req.cacheKey = key;
       req.cacheTTL = ttl;
       next();
@@ -91,6 +92,7 @@ function cacheMiddleware(keyBuilder, ttl) {
 async function saveToCache(key, data, ttl) {
   try {
     await redisClient.set(key, JSON.stringify(data), { EX: ttl });
+    console.log(`[CACHE SAVE] key: ${key}, TTL: ${ttl}s`);
   } catch (err) {
     console.error('Cache save error:', err);
   }
@@ -98,8 +100,10 @@ async function saveToCache(key, data, ttl) {
 
 async function invalidateUsersCache(userId = null) {
   try {
+    console.log(`[CACHE INVALIDATE] users:all`);
     await redisClient.del('users:all');
     if (userId) {
+      console.log(`[CACHE INVALIDATE] users:${userId}`);
       await redisClient.del(`users:${userId}`);
     }
   } catch (err) {
@@ -109,8 +113,10 @@ async function invalidateUsersCache(userId = null) {
 
 async function invalidateProductsCache(productId = null) {
   try {
+    console.log(`[CACHE INVALIDATE] products:all`);
     await redisClient.del('products:all');
     if (productId) {
+      console.log(`[CACHE INVALIDATE] products:${productId}`);
       await redisClient.del(`products:${productId}`);
     }
   } catch (err) {
@@ -353,7 +359,6 @@ app.delete('/api/users/:id', authMiddleware, roleMiddleware(['admin']), async (r
   if (idx === -1) return res.status(404).json({ error: 'Пользователь не найден' });
   users[idx].blocked = true;
 
-  // Инвалидировать кэш
   await invalidateUsersCache(users[idx].id);
 
   res.status(204).send();

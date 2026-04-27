@@ -14,11 +14,11 @@ services:
   backend2:
     build: .
     environment:
-      - PORT=3000
+      - PORT=3001
       - SERVER_NAME=backend-2
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -26,11 +26,11 @@ services:
   backend3:
     build: .
     environment:
-      - PORT=3000
+      - PORT=3002
       - SERVER_NAME=backend-3-backup
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3002/health"]
       interval: 10s
       timeout: 5s
       retries: 3

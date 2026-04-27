@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', server: SERVER_NAME });
+  res.json({ status: 'ok', server: SERVER_NAME, port: PORT });
 });
 
 app.get('/api/data', (req, res) => {

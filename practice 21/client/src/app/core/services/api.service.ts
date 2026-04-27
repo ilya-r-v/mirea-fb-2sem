@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Product } from '../../models/product.model';
 import { AuthResponse, User } from '../../models/user.model';
 
@@ -26,14 +26,16 @@ export class ApiService {
         return this.http.get<User>(`${this.baseUrl}/auth/me`);
     }
 
-    // Users (admin)
-
     getUsers(): Observable<User[]> {
-        return this.http.get<User[]>(`${this.baseUrl}/users`);
+        return this.http.get<any>(`${this.baseUrl}/users`).pipe(
+            map(res => res.data || res)
+        );
     }
 
     getUser(id: string): Observable<User> {
-        return this.http.get<User>(`${this.baseUrl}/users/${id}`);
+        return this.http.get<any>(`${this.baseUrl}/users/${id}`).pipe(
+            map(res => res.data || res)
+        );
     }
 
     updateUser(id: string, data: Partial<User>): Observable<User> {
@@ -44,33 +46,27 @@ export class ApiService {
         return this.http.delete<void>(`${this.baseUrl}/users/${id}`);
     }
 
-    // Products
-
     getProducts(): Observable<Product[]> {
-        return this.http.get<Product[]>(`${this.baseUrl}/products`);
+        return this.http.get<any>(`${this.baseUrl}/products`).pipe(
+            map(res => res.data || res)
+        );
     }
 
     getProduct(id: string): Observable<Product> {
-        return this.http.get<Product>(`${this.baseUrl}/products/${id}`);
-    }
-
-    createProduct(product: Omit<Product, 'id'>): Observable<Product> {
-        return this.http.post<Product>(`${this.baseUrl}/products`, product);
-    }
-
-    updateProduct(id: string, product: Partial<Product>): Observable<Product> {
-        return this.http.put<Product>(`${this.baseUrl}/products/${id}`, product);
-    }
-
-    deleteProduct(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/products/${id}`);
+        return this.http.get<any>(`${this.baseUrl}/products/${id}`).pipe(
+            map(res => res.data || res)
+        );
     }
 
     createProductForm(data: FormData): Observable<Product> {
         return this.http.post<Product>(`${this.baseUrl}/products`, data);
     }
-    
+
     updateProductForm(id: string, data: FormData): Observable<Product> {
         return this.http.put<Product>(`${this.baseUrl}/products/${id}`, data);
+    }
+
+    deleteProduct(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/products/${id}`);
     }
 }
