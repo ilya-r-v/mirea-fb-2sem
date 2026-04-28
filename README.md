@@ -210,3 +210,190 @@
 - На сервере реализован планировщик push-уведомлений (с использованием setTimeout) и хранение активных таймеров.
 - В Service Worker добавлена обработка действий из уведомлений (Action Buttons): Обработка нажатия на кнопку «Отложить на 5 минут». Отправка запроса к серверу для переноса таймера напоминания.
 - Гарантирована работоспособность напоминаний в фоновом режиме, даже если вкладка с приложением закрыта.
+
+# Контрольная работа №4
+## Фронтенд и бэкенд разработка — Практические занятия 19–23
+
+---
+
+## Практическое занятие 19 — REST API с PostgreSQL
+
+Серверное приложение на Node.js + Express с подключением к реляционной базе данных PostgreSQL.
+
+**Стек:** Node.js, Express, PostgreSQL, pg
+
+**Сущность `User`:**
+
+| Поле | Тип | Описание |
+|---|---|---|
+| id | Integer | Уникальный идентификатор |
+| first_name | Varchar | Имя пользователя |
+| last_name | Varchar | Фамилия пользователя |
+| age | Integer | Возраст |
+| created_at | Timestamp | Время создания (unix) |
+| updated_at | Timestamp | Время обновления (unix) |
+
+**Эндпоинты:**
+
+| Метод | Маршрут | Описание |
+|---|---|---|
+| POST | `/api/users` | Создание пользователя |
+| GET | `/api/users` | Получение списка пользователей |
+| GET | `/api/users/:id` | Получение пользователя по ID |
+| PATCH | `/api/users/:id` | Обновление пользователя |
+| DELETE | `/api/users/:id` | Удаление пользователя |
+
+**Запуск:**
+```bash
+npm install
+npm start
+```
+
+---
+
+## Практическое занятие 20 — REST API с MongoDB
+
+Серверное приложение на Node.js + Express с подключением к документоориентированной базе данных MongoDB.
+
+**Стек:** Node.js, Express, MongoDB, Mongoose
+
+**Сущность `User`** — аналогична практике 19, реализована в виде Mongoose-схемы.
+
+**Эндпоинты:**
+
+| Метод | Маршрут | Описание |
+|---|---|---|
+| POST | `/api/users` | Создание пользователя |
+| GET | `/api/users` | Получение списка пользователей |
+| GET | `/api/users/:id` | Получение пользователя по ID |
+| PATCH | `/api/users/:id` | Обновление пользователя |
+| DELETE | `/api/users/:id` | Удаление пользователя |
+
+**Запуск:**
+```bash
+npm install
+npm start
+```
+
+---
+
+## Практическое занятие 21 — Кэширование с Redis
+
+Доработка сервера из практики №11 (Auth & Products API с RBAC): добавлено кэширование GET-маршрутов через Redis.
+
+**Стек:** Node.js, Express, JWT, bcrypt, Redis, Multer, Swagger
+
+**Реализовано:**
+- `cacheMiddleware(keyBuilder, ttl)` — проверяет наличие данных в Redis перед обращением к серверу
+- `saveToCache(key, data, ttl)` — сохраняет ответ в Redis с заданным временем жизни
+- `invalidateUsersCache()` / `invalidateProductsCache()` — инвалидация кэша при мутациях
+
+**Маршруты с кэшированием:**
+
+| Маршрут | Метод | TTL | Ключ Redis |
+|---|---|---|---|
+| `/api/users` | GET | 1 минута | `users:all` |
+| `/api/users/:id` | GET | 1 минута | `users:{id}` |
+| `/api/products` | GET | 10 минут | `products:all` |
+| `/api/products/:id` | GET | 10 минут | `products:{id}` |
+
+Ответ при попадании в кэш содержит `"source": "cache"`, при промахе — `"source": "server"`.
+
+**Запуск Redis:**
+```bash
+docker run -d --name redis-cache -p 6379:6379 redis
+```
+
+**Запуск сервера:**
+```bash
+npm install
+node server.js
+```
+
+**Swagger UI:** `http://localhost:3000/api-docs`
+
+---
+
+## Практическое занятие 22 — Балансировка нагрузки
+
+Тестовая система балансировки нагрузки с Nginx и HAProxy.
+
+**Стек:** Node.js, Express, Nginx, HAProxy, Docker, Docker Compose
+
+### Структура проекта
+
+```
+practice22/
+├── server.js           # Backend-сервер (Express), возвращает имя экземпляра
+├── Dockerfile          # Образ для backend
+├── docker-compose.yml  # Оркестрация: 3 backend + Nginx
+├── nginx.conf          # Конфиг Nginx для локального запуска
+├── nginx.docker.conf   # Конфиг Nginx для Docker Compose
+├── haproxy.cfg         # Конфиг HAProxy
+└── package.json
+```
+
+### Nginx
+
+Настроен блок `upstream` с тремя серверами:
+- `backend1` и `backend2` — основные серверы с `max_fails=2 fail_timeout=30s`
+- `backend3` — резервный (`backup`), подключается при недоступности основных
+
+```nginx
+upstream backend {
+    server backend1:3000 max_fails=2 fail_timeout=30s;
+    server backend2:3000 max_fails=2 fail_timeout=30s;
+    server backend3:3000 backup;
+}
+```
+
+### HAProxy
+
+Альтернативная балансировка с алгоритмом `roundrobin`, HTTP health checks и страницей статистики на `http://localhost:8080/stats`.
+
+### Запуск через Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+### Проверка балансировки
+
+```bash
+curl http://localhost/   # → {"server": "backend-1", ...}
+curl http://localhost/   # → {"server": "backend-2", ...}
+curl http://localhost/   # → {"server": "backend-1", ...}
+```
+
+### Проверка отказоустойчивости
+
+```bash
+docker-compose stop backend1
+curl http://localhost/   # запросы продолжают идти через backend-2
+```
+
+---
+
+## Практическое занятие 23 — Контейнеризация с Docker
+
+Продолжение практики 22: каждый компонент системы вынесен в отдельный Docker-контейнер, вся система поднимается одной командой.
+
+**Стек:** Docker, Docker Compose, Nginx, Node.js
+
+**Ключевые моменты:**
+- Все сервисы объединены в единую Docker-сеть `app-network`
+- Nginx обращается к backend-контейнерам по именам сервисов (`backend1:3000`, `backend2:3000`)
+- Переменная окружения `SERVER_NAME` идентифицирует каждый экземпляр в ответе
+- `restart: unless-stopped` обеспечивает автоматический перезапуск при сбоях
+
+**Запуск:**
+```bash
+docker compose up --build
+```
+
+**Проверка:**
+```bash
+curl http://localhost/
+docker compose logs -f
+docker ps
+```
